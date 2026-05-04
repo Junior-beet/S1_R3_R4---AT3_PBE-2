@@ -1,30 +1,55 @@
-import clienteRepository from "../repositories/clientesRepository.js";
-import { cliente } from "../models/Cliente.js";
-import { telefone } from "../models/Telefone.js";
-import { endereco } from "../models/Endereco.js";
+import clienteRepository from "../repositories/clienteRepository.js";
+import { Cliente } from "../models/Cliente.js";
+import { Telefone } from "../models/Telefone.js";
+import { Endereco } from "../models/Endereco.js";
 import {limparNumero } from "../utils/limparNumero.js";
-import { validarCpf } from "../utils/validarCpf.js";
+import { validarCPF } from "../utils/validarCpf.js";
+import axios from "axios";
 
 const clienteController = {
 
     criar: async (req, res) => {
         try {
-            const { idCategoria, nome, valor } = req.body;
+           
+            let {nome, cpf, cep, telefone, numero} = req.body;
 
-            const cliente = {
-                idCategoria,
-                nome,
-                valor: Number(valor),
-                caminhoImagem,
-                dataCad: new Date()
-            };
+            cpf = limparNumero(cpf);
+            cep = limparNumero(cep);
+            telefone = limparNumero(telefone);
 
-            const result = await clienteRepository.criar(cliente);
 
-            return res.status(201).json({
-                message: "Cliente criado com sucesso",
-                result
-            });
+            const apicep = `https://viacep.com.br/ws/${cep}/json/`
+
+            const consultaApi = await axios.get(apicep)
+
+            const dadosEndereco = {
+                cep : cep,
+                logradouro : consultaApi.data.logradouro,
+                complemento : consultaApi.data.complemento,
+                municipio : consultaApi.data.municipio,
+                uf: consultaApi.data.uf,
+                numero :numero
+
+            }
+
+                const cliente = Cliente.criar({
+                    nome,
+                    cpf
+                })
+
+                const telefoneCliente = Telefone.criar({
+
+                    telefone
+                })
+
+                const endereco = Endereco.criar({
+                    dadosEndereco
+
+                })
+
+                const resultado = clienteRepository.criar(cliente, telefoneCliente, endereco)
+
+                return res.status(201).json({resultado})
 
         } catch (error) {
             console.log(error);

@@ -88,5 +88,10 @@ export class Endereco {
         if (!value.trim() ){
         }throw new Error("Numero inválido");
     }   
+
+    static criar(dados){
+        return new Endereco(dados.cep, dados.logradouro, dados.complemento, dados.municipio, dados.uf, dados.numero, null)
+
+    }
 }
 

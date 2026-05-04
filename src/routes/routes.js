@@ -9,6 +9,6 @@ import clienteRoutes from "./clienteRoutes.js";
 
 routes.use('/categorias', categoriaRoutes);
 routes.use('/produtos', produtoRoutes);
-routes.use('/clientes', clenteRoutes)
+routes.use('/clientes', clienteRoutes)
 
 export default routes;

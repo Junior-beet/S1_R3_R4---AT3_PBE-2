@@ -72,4 +72,6 @@ export class Telefone {
             throw new Error("Tipo inválido");
         }
     }
+
+    static criar (dados){return new Telefone (dados.numero, null)}
 }

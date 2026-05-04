@@ -77,7 +77,7 @@ export class Cliente {
     }
 
     #validarNome(value) {
-        if (!value || value.length < 3) {
+        if (!value ) {
             throw new Error("Nome inválido (mínimo 3 caracteres)");
         }
     }
@@ -92,5 +92,9 @@ export class Cliente {
         if (!value || !value.includes(".")) {
             throw new Error("Caminho da imagem inválido");
         }
+    }
+
+    static criar(dados){
+        return new Cliente(dados.nome, dados.cpf, null)
     }
 }
